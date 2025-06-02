@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  body {
+    height: 100%;
+    overflow: hidden;
+    @apply bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50;
+  }
+
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400 dark:bg-slate-600;
+  }
+}
+
+/* Add any global styles here */
+
+.night-light-active body {
+  filter: sepia(0.3) contrast(0.9) brightness(0.95);
+  /* Adjust these values to your liking */
+  /* A common approach is to reduce blue light */
+  /* filter: sepia(0.2) contrast(0.95) brightness(0.9) hue-rotate(-10deg) saturate(0.9); */
+}
+
+.night-light-active img,
+.night-light-active video {
+  /* Optionally reduce filter on images/videos if it looks too strong */
+  /* filter: sepia(0.1) contrast(1) brightness(1); */
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-white/20 dark:border-slate-700/50;
+  }
+  
+  .neumorphic {
+    @apply bg-slate-100 dark:bg-slate-800 shadow-lg;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-lg transition-all duration-200 font-medium;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600;
+  }
+  
+  .resize-handle {
+    @apply fixed bg-transparent;
+    z-index: 100;
+  }
+  
+  .resize-handle.top { @apply h-2 cursor-n-resize; top: -4px; }
+  .resize-handle.right { @apply w-2 cursor-e-resize; right: -4px; }
+  .resize-handle.bottom { @apply h-2 cursor-s-resize; bottom: -4px; }
+  .resize-handle.left { @apply w-2 cursor-w-resize; left: -4px; }
+  
+  .resize-handle.top.right { @apply h-4 w-4 cursor-ne-resize; }
+  .resize-handle.bottom.right { @apply h-4 w-4 cursor-se-resize; }
+  .resize-handle.bottom.left { @apply h-4 w-4 cursor-sw-resize; }
+  .resize-handle.top.left { @apply h-4 w-4 cursor-nw-resize; }
+}
