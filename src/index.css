@@ -94,3 +94,66 @@
   .resize-handle.bottom.left { @apply h-4 w-4 cursor-sw-resize; }
   .resize-handle.top.left { @apply h-4 w-4 cursor-nw-resize; }
 }
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+/* Startup Animation Progress Bar */
+@keyframes progress-bar-animation {
+  0% { width: 0%; }
+  25% { width: 30%; }
+  50% { width: 60%; }
+  75% { width: 85%; }
+  100% { width: 100%; }
+}
+
+.animate-progress-bar {
+  animation: progress-bar-animation 2s ease-out forwards;
+  /* Adjust duration (2s) and timing function (ease-out) as needed */
+}
+
+/* Ensure html and body take full height for layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars on the body if content overflows during transitions */
+}
+
+/* Example of a more specific scrollbar styling for elements if needed */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.5);
+}

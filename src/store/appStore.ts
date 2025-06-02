@@ -11,15 +11,33 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
     'Social',
     'Development',
     'Utilities',
-    'Education'
+    'Education',
+    'Games',
+    'Custom' // Added Custom category for user-added apps
   ],
   featuredApps: [],
   searchQuery: '',
   selectedCategory: null,
 
   installPWA: async (pwa: PWA) => {
+    // If it's a custom PWA, it's "installed" by being added. Don't fetch manifest.
+    if (pwa.isCustom) {
+      console.log(`InstallPWA called for custom PWA '${pwa.name}'. Custom PWAs are installed by adding them. No manifest fetch needed.`);
+      // Ensure it's marked as installed if for some reason it's not.
+      set((state) => ({
+        pwaApps: state.pwaApps.map(app =>
+          app.id === pwa.id ? { ...app, isInstalled: true } : app
+        )
+      }));
+      return;
+    }
+
     try {
       // Fetch the manifest directly
+      // Ensure manifestUrl is not empty before fetching for non-custom PWAs
+      if (!pwa.manifestUrl) {
+        throw new Error('Manifest URL is missing for this PWA.');
+      }
       const manifestResponse = await fetch(pwa.manifestUrl);
 
       if (!manifestResponse.ok) {
@@ -111,5 +129,24 @@ export const useAppStore = create<AppStoreState>((set, get) => ({
 
   filterByCategory: (category: string | null) => {
     set({ selectedCategory: category });
+  },
+
+  addCustomPWA: async (pwa: PWA, installOnDesktop: boolean) => {
+    set((state) => ({
+      pwaApps: [pwa, ...state.pwaApps], // Add to the beginning of the list
+    }));
+
+    if (installOnDesktop) {
+      useAppsStore.getState().addApp({
+        id: pwa.id,
+        name: pwa.name,
+        icon: pwa.icon,
+        component: pwa.supportsiFrame ? 'PwaView' : 'Browser',
+        startUrl: pwa.startUrl,
+        isPWA: true,
+        // Potentially add other PWA specific fields if your App interface supports them
+      });
+    }
+    // No need to call installPWA for custom apps as they are manually added
   },
 }));
