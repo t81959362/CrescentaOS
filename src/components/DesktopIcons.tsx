@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppsStore } from '../store/apps';
 import type { App } from '../types'; // Changed this line
 import { useWindowsStore } from '../store/windows';
@@ -12,6 +12,16 @@ interface DesktopIconsProps {
 const DesktopIcons: React.FC<DesktopIconsProps> = ({ selectedApp, setSelectedApp }) => {
   const { apps } = useAppsStore();
   const { openWindow } = useWindowsStore();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Example breakpoint for mobile
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Modified handleClick to accept the full App object, select the app, and open the window
   const handleClick = (app: App) => {
@@ -35,9 +45,16 @@ const DesktopIcons: React.FC<DesktopIconsProps> = ({ selectedApp, setSelectedApp
   // is now handled by the single-click handleClick function.
   
 return (
-  <div className="absolute top-4 left-4 grid grid-cols-1 gap-4 z-10">
+  <div className={`absolute top-4 left-4 grid gap-4 z-10 ${isMobile ? 'grid-cols-4 gap-2' : 'grid-cols-1 gap-4'}`}>
       {apps.map((app: App) => {
-        const iconClassName = `flex flex-col items-center justify-center w-20 h-20 rounded-lg hover:bg-black/10 cursor-pointer transition-all ${selectedApp === app.id ? 'bg-black/20' : ''}`;
+        const iconContainerBaseClasses = 'flex flex-col items-center justify-center rounded-lg hover:bg-black/10 cursor-pointer transition-all';
+        const iconSizeClasses = isMobile ? 'w-16 h-16' : 'w-20 h-20';
+        const selectedClasses = selectedApp === app.id ? (isMobile ? 'bg-black/30' : 'bg-black/20') : '';
+        const iconClassName = `${iconContainerBaseClasses} ${iconSizeClasses} ${selectedClasses}`;
+
+        const iconComponentSize = isMobile ? 20 : 24;
+        const textSizeClasses = isMobile ? 'text-[10px] leading-tight' : 'text-xs';
+
         return (
           <div
             key={app.id}
@@ -45,8 +62,8 @@ return (
             onClick={() => handleClick(app)} // Changed to call the modified handleClick with the full app object
             // onDoubleClick handler removed
           >
-            <Icon name={app.icon} className="text-white mb-1" size={24} />
-            <span className="text-xs text-white font-medium text-center px-1 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">
+            <Icon name={app.icon} className="text-white mb-1" size={iconComponentSize} />
+            <span className={`${textSizeClasses} text-white font-medium text-center px-1 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]`}>
               {app.name}
             </span>
           </div>
