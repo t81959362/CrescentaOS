@@ -18,7 +18,7 @@ interface SystemState {
 const defaultSettings: SystemSettings = {
   darkMode: true, // Changed to true
   nightLight: false, // Added for Night Light
-  wallpaper: '/img/default-wallpaper.jpg', // Default wallpaper path
+  wallpaper: 'https://images6.alphacoders.com/131/thumb-1920-1316797.jpg', // Default wallpaper path
   accent: 'blue',
   sound: true,
   notifications: true,
